@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,19 @@ import 'package:spending_calculator/widgets/new_transaction.dart';
 import 'package:spending_calculator/widgets/transaction_list.dart';
 
 void main() {
+  // These first 2 lines to lock orientation in verticale mode
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  //This line is not in it's best location but it's here to detect in which orientation i am in
+  //to display based on it
+  //MediaQuery.of(context).orientation
+
+  //this line is used to padding more when soft keyboard is used and cover the widget
+  //MediaQuery.of(context).viewInsets.bottom +10;
+
+  //to check which platform the code is running on it
+  //Platform.isIOS;
   runApp(MyApp());
 }
 
@@ -88,20 +103,27 @@ class MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      //declared like that so i can access hights
+      title: Text("Spending Expenses"),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => startNewTransactionWidget(context),
+        ),
+      ],
+    );
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Spending Expenses"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => startNewTransactionWidget(context),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Charts(thisWeekList),
+          Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height) *
+                  0.3,
+              //This is hot get status bar height//*MediaQuery.of(context).padding.top,
+              child: Charts(thisWeekList)),
           Expanded(child: TransactionList(transactionList, deleteTransaction)),
           //new trans
           //trans list

@@ -7,12 +7,13 @@ class TransactionList extends StatelessWidget {
   final List<Transactions> transactionList;
   final Function deleteItem;
 
-  TransactionList(this.transactionList,this.deleteItem);
+  TransactionList(this.transactionList, this.deleteItem);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 300,
+        height: MediaQuery.of(context).size.height *
+            0.6, //to calculate height dynamicly
         child: transactionList.isEmpty
             ? Column(
                 children: [
@@ -82,7 +83,8 @@ class TransactionList extends StatelessWidget {
                           Icons.delete,
                           color: Theme.of(context).errorColor,
                         ),
-                        onPressed: ()=>deleteItem(transactionList[index].id),//as it need parameter
+                        onPressed: () => deleteItem(
+                            transactionList[index].id), //as it need parameter
                       ),
                     ],
                   ));
